@@ -44,6 +44,7 @@ strides_range = [1]                          # [1, 2, 3]
 pool_size_range = [2]                                # [1, 2, 3]
 dropout_rate_range = [0.2]
 mini_batch_size_range = [16, 32]
+""" plus autre hyperparamètre_range à modifier """
 
 # Nombre total de combinaisons à essayer
 total_combinations = len(filters_range) * len(kernel_size_range) * len(strides_range) \
@@ -69,7 +70,7 @@ for i in range(num_trials):
     dropout_rate = random.choice(dropout_rate_range)
     mini_batch_size = random.choice(mini_batch_size_range)
     
-    # build and compil model
+    # Construit et compile le modèle
     input_shape = (96, 1)
     input_layer = Input(input_shape)
     conv_layer_1_1 = Conv1D(filters=filters,kernel_size=kernel_size,strides=stride,padding=padding,use_bias=use_bias)(input_layer)
@@ -91,7 +92,7 @@ for i in range(num_trials):
     
     model_checkpoint = callbacks.ModelCheckpoint('best_model_CNN.keras', monitor='val_loss', save_best_only=True)
 
-    # start training
+    # Début entrainnement
     history = model.fit(X_train_normalized, y_train_encoded, 
                         batch_size=mini_batch_size, 
                         epochs=nb_epochs,
@@ -99,7 +100,7 @@ for i in range(num_trials):
                         verbose=False,
                         callbacks=[model_checkpoint])
 
-    # Eveluate best model
+    # Fin entrainnement
     best_model = models.load_model('best_model_CNN.keras')
     train_loss, train_accuracy = best_model.evaluate(X_train_normalized, y_train_encoded)
     test_loss, test_accuracy = best_model.evaluate(X_test_normalized, y_test_encoded)
